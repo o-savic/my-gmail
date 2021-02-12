@@ -38,7 +38,7 @@ public class EmailController {
 		return new ResponseEntity<EmailDTO>(createdDTO, HttpStatus.CREATED); // code 201
 	}
 	
-	@GetMapping("/user/{email}/inbox")
+	@GetMapping("/inbox/{email}")
 	public ResponseEntity<List<EmailDTO>> findInbox(@PathVariable("email") String email) {
 		List<Email> emailList = emailService.findInbox(email);
 		List<EmailDTO> emailDTOs = emailList.stream().map(cred -> {
@@ -49,7 +49,7 @@ public class EmailController {
 		return new ResponseEntity<List<EmailDTO>>(emailDTOs, HttpStatus.OK);
 	}
 	
-	@GetMapping("/user/{email}/starred")
+	@GetMapping("/starred/{email}")
 	public ResponseEntity<List<EmailDTO>> findStarred(@PathVariable("email") String email) {
 		List<Email> emailList = emailService.findStarred(email);
 		List<EmailDTO> emailDTOs = emailList.stream().map(cred -> {
@@ -60,7 +60,7 @@ public class EmailController {
 		return new ResponseEntity<List<EmailDTO>>(emailDTOs, HttpStatus.OK);
 	}
 	
-	@GetMapping("/user/{email}/snoozed")
+	@GetMapping("/snoozed/{email}")
 	public ResponseEntity<List<EmailDTO>> findSnoozed(@PathVariable("email") String email) {
 		List<Email> emailList = emailService.findSnoozed(email);
 		List<EmailDTO> emailDTOs = emailList.stream().map(cred -> {
@@ -71,7 +71,7 @@ public class EmailController {
 		return new ResponseEntity<List<EmailDTO>>(emailDTOs, HttpStatus.OK);
 	}
 	
-	@GetMapping("/user/{email}/sent")
+	@GetMapping("/sent/{email}")
 	public ResponseEntity<List<EmailDTO>> findAllBySender(@PathVariable("email") String email) {
 		List<Email> emailList = emailService.findAllBySender(email);
 		List<EmailDTO> emailDTOs = emailList.stream().map(cred -> {
@@ -82,7 +82,7 @@ public class EmailController {
 		return new ResponseEntity<List<EmailDTO>>(emailDTOs, HttpStatus.OK);
 	}
 	
-	@GetMapping("/user/{email}/all")
+	@GetMapping("/all/{email}")
 	public ResponseEntity<List<EmailDTO>> findAllByRecipient(@PathVariable("email") String email) {
 		List<Email> emailList = emailService.findAllByRecipient(email);
 		List<EmailDTO> emailDTOs = emailList.stream().map(cred -> {
@@ -93,7 +93,7 @@ public class EmailController {
 		return new ResponseEntity<List<EmailDTO>>(emailDTOs, HttpStatus.OK);
 	}
 	
-	@GetMapping("/user/{email}/spam")
+	@GetMapping("/spam/{email}")
 	public ResponseEntity<List<EmailDTO>> findSpam(@PathVariable("email") String email) {
 		List<Email> emailList = emailService.findSpam(email);
 		List<EmailDTO> emailDTOs = emailList.stream().map(cred -> {
@@ -104,7 +104,7 @@ public class EmailController {
 		return new ResponseEntity<List<EmailDTO>>(emailDTOs, HttpStatus.OK);
 	}
 	
-	@GetMapping("/user/{email}/trash")
+	@GetMapping("/trash/{email}")
 	public ResponseEntity<List<EmailDTO>> findTrash(@PathVariable("email") String email) {
 		List<Email> emailList = emailService.findTrash(email);
 		List<EmailDTO> emailDTOs = emailList.stream().map(cred -> {
