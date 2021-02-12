@@ -11,6 +11,15 @@ import { setAuthorizationToken, setUser } from "./store/actions/auth";
 import LoginPage from "./components/user/LoginPage";
 import RegistrationPage from "./components/user/RegistrationPage"
 import InboxPage from './components/email/InboxPage';
+import StarredPage from './components/email/StarredPage';
+import AllPage from './components/email/AllPage';
+import SnoozedPage from './components/email/SnoozedPage';
+import TrashPage from './components/email/TrashPage';
+import SpamPage from './components/email/SpamPage';
+import SentPage from './components/email/SentPage';
+import ProfilePage from './components/user/ProfilePage';
+import SuccessfullyUpdatedPage from "./components/user/SuccessfullyUpdatedPage"
+
 
 const store = configureStore();
 if (localStorage.jwtToken) {
@@ -41,11 +50,26 @@ function App() {
           <Route exact path="/" component={LoginPage} />
           <Route exact path="/login" component={LoginPage} />
           <Route exact path="/register" component={RegistrationPage} />
-          <Route exact path="/inbox" render={() => (
+          <Route exact path="/profile" render={() => (
             localStorage.getItem("jwtToken") == null ? (
               <Redirect to="/login" />
             ) : (
-                <InboxPage />
+                <ProfilePage />
+              )
+          )} />
+          <Route exact path="/success" render={() => (
+            localStorage.getItem("jwtToken") == null ? (
+              <Redirect to="/login" />
+            ) : (
+                <SuccessfullyUpdatedPage />
+              )
+          )} />
+
+          <Route exact path="/all" render={() => (
+            localStorage.getItem("jwtToken") == null ? (
+              <Redirect to="/login" />
+            ) : (
+                <AllPage />
               )
           )} />
           <Route exact path="/inbox" render={() => (
@@ -53,6 +77,41 @@ function App() {
               <Redirect to="/login" />
             ) : (
                 <InboxPage />
+              )
+          )} />
+          <Route exact path="/starred" render={() => (
+            localStorage.getItem("jwtToken") == null ? (
+              <Redirect to="/login" />
+            ) : (
+                <StarredPage />
+              )
+          )} />
+          <Route exact path="/snoozed" render={() => (
+            localStorage.getItem("jwtToken") == null ? (
+              <Redirect to="/login" />
+            ) : (
+                <SnoozedPage />
+              )
+          )} />
+          <Route exact path="/spam" render={() => (
+            localStorage.getItem("jwtToken") == null ? (
+              <Redirect to="/login" />
+            ) : (
+                <SpamPage />
+              )
+          )} />
+          <Route exact path="/sent" render={() => (
+            localStorage.getItem("jwtToken") == null ? (
+              <Redirect to="/login" />
+            ) : (
+                <SentPage />
+              )
+          )} />
+          <Route exact path="/trash" render={() => (
+            localStorage.getItem("jwtToken") == null ? (
+              <Redirect to="/login" />
+            ) : (
+                <TrashPage />
               )
           )} />
         </Switch>

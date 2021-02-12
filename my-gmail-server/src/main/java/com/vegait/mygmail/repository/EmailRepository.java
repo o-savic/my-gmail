@@ -12,16 +12,16 @@ public interface EmailRepository extends JpaRepository<Email, Long> {
 	@Query(value = "SELECT * FROM email AS e WHERE e.sender_id = :userId AND e.deleted = FALSE", nativeQuery = true)
 	public List<Email> findBySender(Long userId);
 	
-	@Query(value = "SELECT * FROM email AS e WHERE e.recipient_id = :userId AND e.deleted = FALSE", nativeQuery = true)
+	@Query(value = "SELECT * FROM email AS e WHERE e.recipient_id = :userId AND e.deleted = FALSE AND e.spam = FALSE", nativeQuery = true)
 	public List<Email> findByRecipient(Long userId);
 	
-	@Query(value = "SELECT * FROM email AS e WHERE e.recipient_id = :userId AND e.deleted = FALSE AND e.archived = FALSE", nativeQuery = true)
+	@Query(value = "SELECT * FROM email AS e WHERE e.recipient_id = :userId AND e.deleted = FALSE AND e.archived = FALSE AND e.spam = FALSE AND e.snoozed = FALSE", nativeQuery = true)
 	public List<Email> findInbox(Long userId);
 	
-	@Query(value = "SELECT * FROM email AS e WHERE e.recipient_id = :userId AND e.deleted = FALSE AND e.archived = FALSE AND e.starred = TRUE", nativeQuery = true)
+	@Query(value = "SELECT * FROM email AS e WHERE e.recipient_id = :userId AND e.deleted = FALSE AND e.archived = FALSE AND e.starred = TRUE AND e.spam = FALSE", nativeQuery = true)
 	public List<Email> findStarred(Long userId);
 	
-	@Query(value = "SELECT * FROM email AS e WHERE e.recipient_id = :userId AND e.deleted = FALSE AND e.archived = FALSE AND e.snoozed = TRUE", nativeQuery = true)
+	@Query(value = "SELECT * FROM email AS e WHERE e.recipient_id = :userId AND e.deleted = FALSE AND e.archived = FALSE AND e.snoozed = TRUE AND e.spam = FALSE", nativeQuery = true)
 	public List<Email> findSnoozed(Long userId);
 	
 	@Query(value = "SELECT * FROM email AS e WHERE e.recipient_id = :userId AND e.deleted = FALSE AND e.archived = FALSE AND e.spam = TRUE", nativeQuery = true)

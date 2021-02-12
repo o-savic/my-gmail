@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { getInboxList } from "../../store/actions/email";
 
-const Dashboard = ({ getInboxList, inboxList, email }) => {
+const InboxPage = ({ getInboxList, inboxList, email }) => {
   
   useEffect(() => {
     getInboxList(email);
@@ -14,7 +14,7 @@ const Dashboard = ({ getInboxList, inboxList, email }) => {
   return (
     <div>
       <div>
-        <Table data={inboxList} />
+        <Table data={inboxList} title="Inbox" />
       </div>
     </div>
   );
@@ -28,5 +28,5 @@ const mapStateToProps = (state) => ({
 export default withRouter(
   connect(mapStateToProps, {
     getInboxList
-  })(Dashboard)
+  })(InboxPage)
 );

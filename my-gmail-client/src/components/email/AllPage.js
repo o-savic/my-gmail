@@ -3,31 +3,30 @@ import React, { useEffect } from "react";
 import Table from "../base/Table";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { getStarredList } from "../../store/actions/email";
+import { getAllList } from "../../store/actions/email";
 
-const StarredPage = ({ getStarredList, starredList, email }) => {
+const AllPage = ({ getAllList, allList, email }) => {
   
   useEffect(() => {
-    getStarredList(email);
-    console.log(starredList);
-  }, [email, getStarredList]); 
+    getAllList(email);
+  }, [email, getAllList]); 
 
   return (
     <div>
       <div>
-        <Table data={starredList} title="Starred" />
+        <Table data={allList} title="All mail" />
       </div>
     </div>
   );
 };
 
 const mapStateToProps = (state) => ({
-  starredList: state.email.starredList,
+  allList: state.email.allList,
   email: state.user.user.sub,
 });
 
 export default withRouter(
   connect(mapStateToProps, {
-    getStarredList
-  })(StarredPage)
+    getAllList
+  })(AllPage)
 );

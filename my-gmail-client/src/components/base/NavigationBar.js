@@ -18,7 +18,13 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import InboxIcon from '@material-ui/icons/Inbox';
-
+import StarBorderIcon from '@material-ui/icons/StarBorder';
+import ScheduleIcon from '@material-ui/icons/Schedule';
+import SendIcon from '@material-ui/icons/Send';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import ReportOutlinedIcon from '@material-ui/icons/ReportOutlined';
+import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
+import AddIcon from '@material-ui/icons/Add';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -102,7 +108,7 @@ const NavigationBar = ({ logout }) => {
       </AppBar>
       <Drawer
         className={classes.drawer}
-        variant="persistent"
+        variant="permanent"
         anchor="left"
         open={open}
         classes={{
@@ -124,9 +130,15 @@ const NavigationBar = ({ logout }) => {
           indicatorColor="primary"
           textColor="primary"
         >
-          <Tab label="Inbox" href="/inbox" {...a11yProps(0)} icon={<InboxIcon />} />
-          <Tab label="Profile" style={{ position: "fixed", bottom: "0" }} href="/profile"  {...a11yProps(4)} icon={<AccountCircleIcon />} />
-
+          <Tab label="Compose" href="/compose"  {...a11yProps(0)} icon={<AddIcon />} />
+          <Tab label="Inbox" href="/inbox" {...a11yProps(1)} icon={<InboxIcon />} />
+          <Tab label="Starred" href="/starred"  {...a11yProps(2)} icon={<StarBorderIcon />} />
+          <Tab label="Snoozed" href="/snoozed"  {...a11yProps(3)} icon={<ScheduleIcon />} />
+          <Tab label="Sent" href="/sent"  {...a11yProps(4)} icon={<SendIcon />} />
+          <Tab label="All mail" href="/all"  {...a11yProps(5)} icon={<MailOutlineIcon />} />
+          <Tab label="Spam" href="/spam"  {...a11yProps(6)} icon={<ReportOutlinedIcon />} />
+          <Tab label="Trash" href="/trash"  {...a11yProps(7)} icon={<DeleteOutlineOutlinedIcon />} />
+          <Tab label="Profile" style={{ position: "fixed", bottom: "0" }} href="/profile"  {...a11yProps(8)} icon={<AccountCircleIcon />} />
         </Tabs>
       </Drawer>
 
