@@ -5,7 +5,12 @@ import {
 	SENT_LIST,
 	TRASH_LIST,
 	ALL_LIST,
-	SPAM_LIST
+	SPAM_LIST,
+	SENT_EMAIL,
+	STARRED_EMAIL,
+	DELETED_EMAIL,
+	ARCHIVED_EMAIL,
+	SPAM_EMAIL
 } from "../actionTypes";
 
 const DEFAULT_STATE = {
@@ -15,12 +20,42 @@ const DEFAULT_STATE = {
 	sentList: [],
 	allList: [],
 	spamList: [],
-	trashList: []
+	trashList: [],
+	sentEmail: {},
+	starredEmail: {},
+	deletedEmail: {},
+	archivedEmail: {},
+	spamEmail: {}
 
 };
 
 export default (state = DEFAULT_STATE, action) => {
 	switch (action.type) {
+		case SENT_EMAIL:
+			return {
+				...state,
+				sentEmail: action.sentEmail
+			};
+		case STARRED_EMAIL:
+			return {
+				...state,
+				starredEmail: action.starredEmail
+			};
+		case DELETED_EMAIL:
+			return {
+				...state,
+				deletedEmail: action.deletedEmail
+			};
+		case ARCHIVED_EMAIL:
+			return {
+				...state,
+				archivedEmail: action.archivedEmail
+			};
+		case SPAM_EMAIL:
+			return {
+				...state,
+				spamEmail: action.spamEmail
+			};
 		case INBOX_LIST:
 			return {
 				...state,

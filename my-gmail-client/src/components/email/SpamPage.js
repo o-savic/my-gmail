@@ -7,14 +7,20 @@ import { getSpamList } from "../../store/actions/email";
 
 const SpamPage = ({ getSpamList, spamList, email }) => {
   
+const [updated, setUpdated] = React.useState(false);
   useEffect(() => {
     getSpamList(email);
-  }, [email, getSpamList]); 
+    setUpdated(false);
+  }, [email, getSpamList, updated]);
+
+  const onUpdateTable = (value) => {
+    setUpdated(value);
+  }
 
   return (
     <div>
       <div>
-        <Table data={spamList} title="Spam" />
+        <Table data={spamList} title="Spam" onUpdate={onUpdateTable} />
       </div>
     </div>
   );

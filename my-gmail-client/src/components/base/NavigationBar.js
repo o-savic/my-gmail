@@ -130,7 +130,7 @@ const NavigationBar = ({ logout }) => {
           indicatorColor="primary"
           textColor="primary"
         >
-          <Tab label="Compose" href="/compose"  {...a11yProps(0)} icon={<AddIcon />} />
+          <Tab label="Compose" href="/compose" type="text"  {...a11yProps(0)} icon={<AddIcon />} />
           <Tab label="Inbox" href="/inbox" {...a11yProps(1)} icon={<InboxIcon />} />
           <Tab label="Starred" href="/starred"  {...a11yProps(2)} icon={<StarBorderIcon />} />
           <Tab label="Snoozed" href="/snoozed"  {...a11yProps(3)} icon={<ScheduleIcon />} />

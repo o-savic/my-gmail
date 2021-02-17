@@ -6,15 +6,21 @@ import { withRouter } from "react-router-dom";
 import { getAllList } from "../../store/actions/email";
 
 const AllPage = ({ getAllList, allList, email }) => {
-  
+
+  const [updated, setUpdated] = React.useState(false);
   useEffect(() => {
     getAllList(email);
-  }, [email, getAllList]); 
+    setUpdated(false);
+  }, [email, getAllList, updated]);
+
+  const onUpdateTable = (value) => {
+    setUpdated(value);
+  }
 
   return (
     <div>
       <div>
-        <Table data={allList} title="All mail" />
+        <Table data={allList} title="All mail" onUpdate={onUpdateTable} />
       </div>
     </div>
   );

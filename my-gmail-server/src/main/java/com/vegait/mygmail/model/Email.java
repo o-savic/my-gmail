@@ -1,5 +1,7 @@
 package com.vegait.mygmail.model;
 
+import java.time.LocalDate;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -30,11 +32,6 @@ public class Email {
 	@OneToOne(fetch = FetchType.EAGER)
 	private User recipient ;
 	
-	/*
-	@OneToMany
-	private List<User> recipients;
-	*/
-	
 	private String text ;
 	
 	private Boolean deleted = false ;
@@ -42,6 +39,7 @@ public class Email {
 	private Boolean snoozed = false ;
 	private Boolean spam = false ;
 	private Boolean archived = false;
+	private LocalDate date;
 	
 	public Email(String subject, User sender, User recipient, String text) {
 		super();
@@ -56,6 +54,13 @@ public class Email {
 		this.subject = subject;
 		this.text = text;
 	}
+
+	public Email(LocalDate date) {
+		super();
+		this.date = date;
+	}
+	
+	
 	
 	
 	

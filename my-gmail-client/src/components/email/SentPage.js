@@ -6,15 +6,22 @@ import { withRouter } from "react-router-dom";
 import { getSentList } from "../../store/actions/email";
 
 const SentPage = ({ getSentList, sentList, email }) => {
-  
+
+  const [updated, setUpdated] = React.useState(false);
+
   useEffect(() => {
     getSentList(email);
-  }, [email, getSentList]); 
+    setUpdated(false);
+  }, [email, getSentList, updated]);
+
+  const onUpdateTable = (value) => {
+    setUpdated(value);
+  }
 
   return (
     <div>
       <div>
-        <Table data={sentList} title="Sent" />
+        <Table data={sentList} title="Sent" onUpdate={onUpdateTable} />
       </div>
     </div>
   );

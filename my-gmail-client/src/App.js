@@ -19,6 +19,7 @@ import SpamPage from './components/email/SpamPage';
 import SentPage from './components/email/SentPage';
 import ProfilePage from './components/user/ProfilePage';
 import SuccessfullyUpdatedPage from "./components/user/SuccessfullyUpdatedPage"
+import SendEmailPage from './components/email/SendEmailPage';
 
 
 const store = configureStore();
@@ -65,6 +66,13 @@ function App() {
               )
           )} />
 
+          <Route exact path="/compose" render={() => (
+            localStorage.getItem("jwtToken") == null ? (
+              <Redirect to="/login" />
+            ) : (
+                <SendEmailPage />
+              )
+          )} />
           <Route exact path="/all" render={() => (
             localStorage.getItem("jwtToken") == null ? (
               <Redirect to="/login" />

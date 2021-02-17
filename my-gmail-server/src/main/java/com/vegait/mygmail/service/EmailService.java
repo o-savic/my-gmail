@@ -1,5 +1,6 @@
 package com.vegait.mygmail.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ public class EmailService {
 		User recipient = userRepository.findByEmail(recipientEmail);
 		email.setSender(sender);
 		email.setRecipient(recipient);
+		email.setDate(LocalDate.now());
 		save(email);
 		return email;
 	}
@@ -76,14 +78,55 @@ public class EmailService {
 		emailRepository.save(email);
 	}
 
-	public Email deleteEmail(Long id) {
+	public Email changeDeleted(Long id) {
 		Email email = emailRepository.getOne(id);
 		if (email == null) {
-			throw new BadRequestException("Email cannot be deleted.");
+			throw new BadRequestException("Email cannot be (un)deleted.");
 		}
-		email.setDeleted(true);
+		email.setDeleted(!email.getDeleted());
 		save(email);
 		return email;
+	}
+	
+	public Email changeStarred(Long id) {
+		Email email = emailRepository.getOne(id);
+		if (email == null || email.getDeleted() || email.getSpam()) {
+			throw new BadRequestException("Email cannot be (un)starred.");
+		}
+		email.setStarred(!email.getStarred());
+		save(email);
+		return email ;
+	}
+	
+	public Email changeSpam(Long id) {
+		Email email = emailRepository.getOne(id);
+		if (email == null || email.getDeleted()) {
+			throw new BadRequestException("Email cannot be (un)spam.");
+		}
+		email.setSpam(!email.getSpam());
+		save(email);
+		return email ;
+	}
+	
+	public Email changeArchived(Long id) {
+		Email email = emailRepository.getOne(id);
+		if (email == null || email.getDeleted() || email.getSpam()) {
+			throw new BadRequestException("Email cannot be (un)archived.");
+		}
+		email.setArchived(!email.getArchived());
+		save(email);
+		return email ;
+	}
+	
+	public Email snoozeEmail(Long id, Email e) {
+		Email email = emailRepository.getOne(id);
+		if (email == null || email.getDeleted() || email.getSpam()) {
+			throw new BadRequestException("Email cannot be snoozed.");
+		}
+		email.setDate(e.getDate());
+		email.setSnoozed(true);
+		save(email);
+		return email ;
 	}
 
 }

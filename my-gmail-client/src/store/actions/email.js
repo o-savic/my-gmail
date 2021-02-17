@@ -5,10 +5,127 @@ import {
   SENT_LIST,
   ALL_LIST,
   SPAM_LIST,
-  TRASH_LIST
+  TRASH_LIST,
+  SENT_EMAIL,
+  STARRED_EMAIL,
+  DELETED_EMAIL,
+  SPAM_EMAIL,
+  ARCHIVED_EMAIL,
+  SNOOZED_EMAIL
 } from "../actionTypes";
 import axios from "axios";
 import { emailPath } from "../../properties/path-properties";
+
+export const sendEmail = (emailDTO) => async (dispatch) => {
+  try {
+    const sentEmail = await axios.post(emailPath, emailDTO, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+      },
+    });
+    dispatch(setSentEmail(sentEmail.data));
+    return sentEmail;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export const setSentEmail = (sentEmail) => ({
+  type: SENT_EMAIL,
+  sentEmail
+})
+
+export const changeStarred = (id) => async (dispatch) => {
+  try {
+    const starredEmail = await axios.patch(emailPath + `/star/${id}`, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+      },
+    });
+    dispatch(setChangedStarred(starredEmail.data));
+    return starredEmail;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const setChangedStarred = (starredEmail) => ({
+  type: STARRED_EMAIL,
+  starredEmail
+});
+
+export const changeDeleted = (id) => async (dispatch) => {
+  try {
+    const deletedEmail = await axios.patch(emailPath + `/delete/${id}`, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+      },
+    });
+    dispatch(setChangedDeleted(deletedEmail.data));
+    return deletedEmail;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const setChangedDeleted = (deletedEmail) => ({
+  type: DELETED_EMAIL,
+  deletedEmail
+});
+
+export const changeArchived = (id) => async (dispatch) => {
+  try {
+    const archivedEmail = await axios.patch(emailPath + `/archive/${id}`, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+      },
+    });
+    dispatch(setChangedArchived(archivedEmail.data));
+    return archivedEmail;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const setChangedArchived = (archivedEmail) => ({
+  type: ARCHIVED_EMAIL,
+  archivedEmail
+});
+
+export const changeSpam = (id) => async (dispatch) => {
+  try {
+    const spamEmail = await axios.patch(emailPath + `/spam/${id}`, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+      },
+    });
+    dispatch(setChangedSpam(spamEmail.data));
+    return spamEmail;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const setChangedSpam = (spamEmail) => ({
+  type: SPAM_EMAIL,
+  spamEmail
+});
+
+export const snoozeEmail = (email) => async (dispatch) => {
+  try {
+    const snoozedEmail = await axios.put(emailPath + `/${email.id}`, email);
+    dispatch(setSnoozedEmail(snoozedEmail.data));
+    return snoozedEmail;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const setSnoozedEmail = (snoozedEmail) => ({
+  type: SNOOZED_EMAIL,
+  snoozedEmail,
+});
+
 
 export const getInboxList = (email) => async (dispatch) => {
   try {

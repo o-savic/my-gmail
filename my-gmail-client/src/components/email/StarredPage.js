@@ -6,16 +6,21 @@ import { withRouter } from "react-router-dom";
 import { getStarredList } from "../../store/actions/email";
 
 const StarredPage = ({ getStarredList, starredList, email }) => {
-  
+
+  const [updated, setUpdated] = React.useState(false);
   useEffect(() => {
     getStarredList(email);
-    console.log(starredList);
-  }, [email, getStarredList]); 
+    setUpdated(false);
+  }, [email, getStarredList, updated]);
+
+  const onUpdateTable = (value) => {
+    setUpdated(value);
+  }
 
   return (
     <div>
       <div>
-        <Table data={starredList} title="Starred" />
+        <Table data={starredList} title="Starred" onUpdate={onUpdateTable} />
       </div>
     </div>
   );

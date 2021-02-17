@@ -1,6 +1,6 @@
 package com.vegait.mygmail.dto;
 
-import com.vegait.mygmail.model.User;
+import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,12 +18,8 @@ public class EmailDTO {
 	private String subject ;
 	private String senderEmail ;
 	private String recipientEmail ;
-	
-	/*
-	private List<User> recipients;
-	*/
-	
 	private String text ;
+	private LocalDate date ;
 	
 	private Boolean deleted = false ;
 	private Boolean starred = false ;
