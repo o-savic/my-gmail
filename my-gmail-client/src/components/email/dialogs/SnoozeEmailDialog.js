@@ -8,27 +8,44 @@ import { useTheme } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { ScheduleOutlined } from "@material-ui/icons";
-import { snoozeEmail } from "../../../store/actions/email"
+import { snoozeEmail, unSnoozeEmail } from "../../../store/actions/email"
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import { DialogContent } from "@material-ui/core";
+import HighlightOffIcon from '@material-ui/icons/HighlightOff';
 
-const SnoozeEmailDialog = ({ idV, dateV, title, snoozeEmail, onUpdate }) => {
-  const [open, setOpen] = React.useState(false);
+const useStyles = makeStyles((theme) => ({
+  dialogPaper: {
+    height: '50vh',
+    width: '50vh',
+  },
+  textField: {
+    width: 200,
+  },
+}));
+
+const SnoozeEmailDialog = ({ idV, dateSnoozedV, onError, title, snoozeEmail, unSnoozeEmail, onUpdate }) => {
+  const classes = useStyles();
+  // Today's date (it should be in format 2021-02-17 / 2021-12-17)
+  var date = new Date();
+  var formatedDate = (date.getMonth() < 9) ? `${date.getFullYear()}-0${date.getMonth() + 1}-${date.getDate()}` : `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
+
+  const [openDialog, setOpenDialog] = React.useState(false);
   const [error, setError] = React.useState(false);
   const [state, setState] = React.useState({
     id: (idV == null) ? "" : idV,
-    date: (dateV == null) ? "" : dateV
+    dateSnoozed: (dateSnoozedV == null) ? formatedDate : dateSnoozedV // today or snoozed date (if exists)
   });
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleClickOpen = () => {
-    setOpen(true);
+    setOpenDialog(true);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setOpenDialog(false);
     onUpdate(false);
   };
   const handleYES = async (e) => {
@@ -37,16 +54,41 @@ const SnoozeEmailDialog = ({ idV, dateV, title, snoozeEmail, onUpdate }) => {
       if (response && response.status === 200) {
         onUpdate(true);
         setError(false);
-        setOpen(false);
+        setOpenDialog(false);
       }
     });
     {
       if (title === "Trash" || title === "Spam") {
         setError(true);
-        setOpen(true);
+        setOpenDialog(false);
         onUpdate(false);
+        onError(true);
       }
     }
+  };
+
+  const handleUnsnooze = async (e) => {
+    e.preventDefault();
+    const res = await unSnoozeEmail(idV).then((response) => {
+      if (response && response.status === 200) {
+        onUpdate(true);
+        setError(false);
+        setOpenDialog(false);
+      }
+    });
+    {
+      if (title === "Trash" || title === "Spam") {
+        setError(true);
+        setOpenDialog(false);
+        onUpdate(false);
+        onError(true);
+      }
+    }
+  }
+
+  const handleChangeTextField = (e) => {
+    setState({ ...state, [e.target.name]: e.target.value });
+
   };
 
   return (
@@ -54,19 +96,41 @@ const SnoozeEmailDialog = ({ idV, dateV, title, snoozeEmail, onUpdate }) => {
       <ScheduleOutlined onClick={handleClickOpen} ></ScheduleOutlined>
       <Dialog
         fullScreen={fullScreen}
-        open={open}
+        open={openDialog}
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
+        classes={{ paper: classes.dialogPaper }}
       >
-        <DialogTitle id="responsive-dialog-title">
+        <DialogTitle id="responsive-dialog-title" style={{ textAlign: "center" }}>
           {"Pick date & time"}
         </DialogTitle>
+        <DialogContent style={{ textAlign: "center" }}>
+          <form noValidate>
+            <TextField
+              id="date"
+              name="dateSnoozed"
+              type="date"
+              className={classes.textField}
+              defaultValue={state.dateSnoozed}
+              selected={state.dateSnoozed}
+              onSelect={handleChangeTextField}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </form>
+        </DialogContent>
+
         <DialogActions>
+          <Button autoFocus onClick={handleUnsnooze} color="primary" >
+            <HighlightOffIcon></HighlightOffIcon>
+            UNSNOOZE
+          </Button>
           <Button autoFocus onClick={handleClose} color="primary">
             CANCEL
           </Button>
           <Button onClick={handleYES} color="primary" autoFocus>
-            OK
+            SNOOZE
           </Button>
         </DialogActions>
       </Dialog>
@@ -76,5 +140,5 @@ const SnoozeEmailDialog = ({ idV, dateV, title, snoozeEmail, onUpdate }) => {
 const mapStateToProps = state => ({});
 
 export default withRouter(
-  connect(mapStateToProps, { snoozeEmail })(SnoozeEmailDialog)
+  connect(mapStateToProps, { snoozeEmail, unSnoozeEmail })(SnoozeEmailDialog)
 );

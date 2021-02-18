@@ -10,7 +10,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import NavigationBar from "../../components/base/NavigationBar"
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
-import { sendEmail } from "../../store/actions/email"
+import { sendEmail, saveDraft } from "../../store/actions/email"
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SendEmail = ({ sendEmail, email, history }) => {
+const SendEmail = ({ sendEmail, saveDraft, email, history }) => {
   const [state, setState] = React.useState({
     subject: "",
     senderEmail: email,
@@ -52,6 +52,16 @@ const SendEmail = ({ sendEmail, email, history }) => {
     const res = await sendEmail(state).then((response) => {
       if (response.status === 201) {
         history.push("/sent");
+      }
+    });
+    setError(true);
+  };
+
+  const handleSaveDraft = async (e) => {
+    e.preventDefault();
+    const res = await saveDraft(state).then((response) => {
+      if (response.status === 200) {
+        history.push("/drafts");
       }
     });
     setError(true);
@@ -113,16 +123,28 @@ const SendEmail = ({ sendEmail, email, history }) => {
               error={error}
               onChange={handleChangeTextField}
             />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick={handleSubmit}
-            >
-              SEND
-          </Button>
+            <div align="center">
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                onClick={handleSaveDraft}
+              >
+                SAVE DRAFT
+              </Button>
+              &nbsp;
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+                onClick={handleSubmit}
+              >
+                SEND
+              </Button>
+            </div>
+
 
           </form>
         </div>
@@ -136,4 +158,4 @@ const mapStateToProps = (state) => ({
   email: state.user.user.sub
 });
 
-export default withRouter(connect(mapStateToProps, { sendEmail })(SendEmail));
+export default withRouter(connect(mapStateToProps, { sendEmail, saveDraft })(SendEmail));

@@ -58,8 +58,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and() // telling spring
 																									// security not to
 																									// create a session
-				.authorizeRequests().antMatchers("/api/auth/**").permitAll().antMatchers("/api/users").permitAll().antMatchers("/api/emails/**").permitAll()
-				.antMatchers("/").permitAll().antMatchers("/api/git/execute").permitAll().anyRequest().authenticated(); 
+				.authorizeRequests().antMatchers("/api/auth/**").permitAll().antMatchers("/api/users").permitAll()
+				.antMatchers("/").permitAll().anyRequest().authenticated();
 
 		// making sure that my filter is called before
 		// UsernamePasswordAuthenticationFilter

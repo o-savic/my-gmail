@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +39,21 @@ public class EmailController {
 				dto.getRecipientEmail());
 		EmailDTO createdDTO = modelMapper.map(email, EmailDTO.class);
 		return new ResponseEntity<EmailDTO>(createdDTO, HttpStatus.CREATED); // code 201
+	}
+	
+	@PostMapping("/draft")
+	public ResponseEntity<EmailDTO> saveDraft(@RequestBody EmailDTO dto) {
+		Email email = emailService.saveDraft(new Email(dto.getSubject(), dto.getText()), dto.getSenderEmail(),
+				dto.getRecipientEmail());
+		EmailDTO createdDTO = modelMapper.map(email, EmailDTO.class);
+		return new ResponseEntity<EmailDTO>(createdDTO, HttpStatus.OK);
+	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Object> permanentlyDelete(@PathVariable Long id) {
+		emailService.permanentlyDelete(id);
+		return new ResponseEntity<Object>(HttpStatus.NO_CONTENT); // code 204
+		
 	}
 
 	@GetMapping("/inbox/{email}")
@@ -116,6 +132,17 @@ public class EmailController {
 
 		return new ResponseEntity<List<EmailDTO>>(emailDTOs, HttpStatus.OK);
 	}
+	
+	@GetMapping("/draft/{email}")
+	public ResponseEntity<List<EmailDTO>> findDraft(@PathVariable("email") String email) {
+		List<Email> emailList = emailService.findDraft(email);
+		List<EmailDTO> emailDTOs = emailList.stream().map(cred -> {
+			EmailDTO dto = modelMapper.map(cred, EmailDTO.class);
+			return dto;
+		}).collect(Collectors.toList());
+
+		return new ResponseEntity<List<EmailDTO>>(emailDTOs, HttpStatus.OK);
+	}
 
 	@PatchMapping("/delete/{id}")
 	public ResponseEntity<EmailDTO> changeDeleted(@PathVariable Long id) {
@@ -148,10 +175,25 @@ public class EmailController {
 
 	@PutMapping("/snooze/{id}")
 	public ResponseEntity<EmailDTO> snoozeEmail(@PathVariable Long id, @RequestBody EmailDTO dto) {
-		Email email = new Email(dto.getDate());
+		Email email = new Email(dto.getDateSnoozed()); // in dto we only have date for snoozing 
 		Email updated = emailService.snoozeEmail(id, email);
 		EmailDTO updatedDTO = modelMapper.map(updated, EmailDTO.class);
 		return new ResponseEntity<EmailDTO>(updatedDTO, HttpStatus.OK);
 	}
+	
+	@PutMapping("/unsnooze/{id}")
+	public ResponseEntity<EmailDTO> unsnoozeEmail(@PathVariable Long id) {
+		Email updated = emailService.unSnoozeEmail(id);
+		EmailDTO updatedDTO = modelMapper.map(updated, EmailDTO.class);
+		return new ResponseEntity<EmailDTO>(updatedDTO, HttpStatus.OK);
+	}
+	
+	@PatchMapping("/read/{id}")
+	public ResponseEntity<EmailDTO> changeRead(@PathVariable Long id) {
+		Email email = emailService.changeRead(id);
+		EmailDTO dto = modelMapper.map(email, EmailDTO.class);
+		return new ResponseEntity<EmailDTO>(dto, HttpStatus.OK);
+	}
+	
 
 }

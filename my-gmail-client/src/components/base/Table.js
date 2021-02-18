@@ -10,15 +10,16 @@ import dense from "@material-ui/core/List/ListContext";
 import Paper from "@material-ui/core/Paper";
 import StarIcon from '@material-ui/icons/Star';
 import StarBorderIcon from '@material-ui/icons/StarBorder';
-import { changeStarred, changeDeleted, changeArchived, changeSpam } from "../../store/actions/email";
+import { changeStarred, changeDeleted, changeArchived, changeSpam, changeRead, permanentlyDeleteEmail } from "../../store/actions/email";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
-import { ArchiveOutlined, Delete, Report, ReportOutlined, ScheduleOutlined } from "@material-ui/icons";
+import { ArchiveOutlined, Delete, DraftsOutlined, MailOutline, Report, ReportOutlined, ScheduleOutlined } from "@material-ui/icons";
 import Archive from "@material-ui/icons/Archive";
 import SnoozeEmailDialog from "../email/dialogs/SnoozeEmailDialog";
+import DeleteForeverOutlinedIcon from '@material-ui/icons/DeleteForeverOutlined';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -58,12 +59,11 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-const ReusableTable = ({ data, title, onUpdate, changeStarred, changeDeleted, changeArchived, changeSpam }) => {
+const ReusableTable = ({ data, title, onUpdate, changeStarred, changeDeleted, changeArchived, changeSpam, changeRead, permanentlyDeleteEmail }) => {
   const classes = useStyles();
   const [error, setError] = React.useState(false);
   const [open, setOpen] = React.useState(false);
-  const [openDialog, setOpenDialog] = React.useState(false);
-  var checkType = (title === "Sent") ? "Recipient" : "Sender";
+  var checkType = (title === "Sent" || title === "Drafts") ? "Recipient" : "Sender";
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
@@ -138,10 +138,31 @@ const ReusableTable = ({ data, title, onUpdate, changeStarred, changeDeleted, ch
       }
     }
   }
+  const readUnread = async (id) => {
+    const res = await changeRead(id).then((response) => {
+      if (response && response.status === 200) {
+        onUpdate(true);
+        setError(false);
+        setOpen(false);
+      }
+      else {
+        setError(true);
+        setOpen(true);
+        onUpdate(false);
+      }
+    });
+  }
 
-  const consoleLog = async (id) => {
-    console.log("snooze clicked " + id);
-    setOpenDialog(true);
+  const permanentlyDelete = async (id) => {
+    await permanentlyDeleteEmail(id).then((response) => {
+      onUpdate(true);
+      setError(false);
+      setOpen(false);
+    });
+  }
+
+  const setOpenError = (value) => {
+    setOpen(value);
   }
 
   return (
@@ -156,35 +177,6 @@ const ReusableTable = ({ data, title, onUpdate, changeStarred, changeDeleted, ch
               size={dense ? "small" : "medium"}
               aria-label="enhanced table"
             >
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center">
-                  </TableCell>
-                  <TableCell align="center">
-                    <b>
-                      <i>{checkType}</i>
-                    </b>
-                  </TableCell>
-                  <TableCell align="center">
-                    <b>
-                      <i>Subject</i>
-                    </b>
-                  </TableCell>
-                  <TableCell align="center">
-                    <b>
-                      <i>Text</i>
-                    </b>
-                  </TableCell>
-                  <TableCell align="center">
-                    <b>
-                      <i>Date</i>
-                    </b>
-                  </TableCell>
-                  <TableCell align="center">
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-
               <TableBody>
                 {data &&
                   data.length > 0 &&
@@ -192,29 +184,40 @@ const ReusableTable = ({ data, title, onUpdate, changeStarred, changeDeleted, ch
                     return (
                       <TableRow hover role="checkbox" key={row.id}>
                         <TableCell align="center">
-                          {row.starred === true ? <StarIcon onClick={() => starUnstar(row.id)} /> : <StarBorderIcon onClick={() => starUnstar(row.id)} />}
+                          {row.starred ? <StarIcon onClick={() => starUnstar(row.id)} /> : <StarBorderIcon onClick={() => starUnstar(row.id)} />}
                         </TableCell>
-                        <TableCell align="center">
-                          {title === "Sent" ? <p>{row.recipientEmail} </p> : <p>{row.senderEmail} </p>}
+                        <TableCell align="center" style={row.isRead ? { fontWeight: 'normal' } : { fontWeight: 'bold' }} >
+                          {(title === "Sent" || title === "Drafts") ? <p>{row.recipientEmail} </p> : <p>{row.senderEmail} </p>}
                         </TableCell>
-                        <TableCell align="center">
+                        <TableCell align="center" style={row.isRead ? { fontWeight: 'normal' } : { fontWeight: 'bold' }}>
                           <p>{row.subject} </p>
                         </TableCell>
                         <TableCell align="center">
                           <p>{row.text} </p>
                         </TableCell>
-                        <TableCell align="center">
-                          <p> {row.date} </p>
+                        <TableCell align="center" style={row.isRead ? { fontWeight: 'normal' } : { fontWeight: 'bold' }}>
+                          {row.snoozed ? <p style={{ color: "orange" }}> <b> {row.dateSnoozed}</b></p> : <p> {row.date} </p>}
                         </TableCell>
                         <TableCell align="center">
-                          {row.archived === true ? <Archive onClick={() => archiveUnarchive(row.id)} /> : <ArchiveOutlined onClick={() => archiveUnarchive(row.id)} />}
-                          {row.deleted === true ? <Delete onClick={() => trashUntrash(row.id)} /> : <DeleteOutlineOutlinedIcon onClick={() => trashUntrash(row.id)} />}
-                          {row.spam === true ? <Report onClick={() => spamUnspam(row.id)} /> : <ReportOutlined onClick={() => spamUnspam(row.id)} />}
+                          {row.archived ? <Archive onClick={() => archiveUnarchive(row.id)} /> : <ArchiveOutlined onClick={() => archiveUnarchive(row.id)} />}
+                          {row.deleted ? <Delete onClick={() => trashUntrash(row.id)} /> : <DeleteOutlineOutlinedIcon onClick={() => trashUntrash(row.id)} />}
+                          {
+                            title !== "Drafts" ?
+                             ( row.spam ? <Report onClick={() => spamUnspam(row.id)} /> : <ReportOutlined onClick={() => spamUnspam(row.id)} /> ) : ""
+                            
+                          }
+                          {row.isRead ? <MailOutline onClick={() => readUnread(row.id)} /> : <DraftsOutlined onClick={() => readUnread(row.id)} />}
+                          {
+                            (title === "Spam" || title === "Trash" || title === "Drafts") ? 
+                              <DeleteForeverOutlinedIcon onClick={() => permanentlyDelete(row.id)} /> : ""
+                          }
                           <SnoozeEmailDialog
                             idV={row.id}
                             dateV={row.date}
+                            dateSnoozedV={row.dateSnoozed}
                             onUpdate={onUpdate}
                             title={title}
+                            onError={setOpenError}
                           />
                         </TableCell>
                       </TableRow>
@@ -245,6 +248,8 @@ export default withRouter(
     changeStarred,
     changeDeleted,
     changeArchived,
-    changeSpam
+    changeSpam,
+    changeRead,
+    permanentlyDeleteEmail
   })(ReusableTable)
 );

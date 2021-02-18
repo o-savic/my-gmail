@@ -11,7 +11,10 @@ import {
   DELETED_EMAIL,
   SPAM_EMAIL,
   ARCHIVED_EMAIL,
-  SNOOZED_EMAIL
+  SNOOZED_EMAIL,
+  READ_EMAIL,
+  DRAFT_EMAIL,
+  DRAFT_LIST
 } from "../actionTypes";
 import axios from "axios";
 import { emailPath } from "../../properties/path-properties";
@@ -33,6 +36,33 @@ export const sendEmail = (emailDTO) => async (dispatch) => {
 export const setSentEmail = (sentEmail) => ({
   type: SENT_EMAIL,
   sentEmail
+})
+
+export const permanentlyDeleteEmail = (id) => async (dispatch) => {
+  try {
+    await axios.delete(emailPath + `/${id}`);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const saveDraft = (emailDTO) => async (dispatch) => {
+  try {
+    const draftEmail = await axios.post(emailPath + "/draft", emailDTO, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+      },
+    });
+    dispatch(setDraftEmail(draftEmail.data));
+    return draftEmail;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export const setDraftEmail = (draftEmail) => ({
+  type: DRAFT_EMAIL,
+  draftEmail
 })
 
 export const changeStarred = (id) => async (dispatch) => {
@@ -113,7 +143,7 @@ export const setChangedSpam = (spamEmail) => ({
 
 export const snoozeEmail = (email) => async (dispatch) => {
   try {
-    const snoozedEmail = await axios.put(emailPath + `/${email.id}`, email);
+    const snoozedEmail = await axios.put(emailPath + `/snooze/${email.id}`, email);
     dispatch(setSnoozedEmail(snoozedEmail.data));
     return snoozedEmail;
   } catch (err) {
@@ -124,6 +154,34 @@ export const snoozeEmail = (email) => async (dispatch) => {
 export const setSnoozedEmail = (snoozedEmail) => ({
   type: SNOOZED_EMAIL,
   snoozedEmail,
+});
+
+export const unSnoozeEmail = (id) => async (dispatch) => {
+  try {
+    const unsnoozedEmail = await axios.put(emailPath + `/unsnooze/${id}`);
+    return unsnoozedEmail;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const changeRead = (id) => async (dispatch) => {
+  try {
+    const readEmail = await axios.patch(emailPath + `/read/${id}`, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+      },
+    });
+    dispatch(setChangedRead(readEmail.data));
+    return readEmail;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const setChangedRead = (readEmail) => ({
+  type: READ_EMAIL,
+  readEmail
 });
 
 
@@ -251,4 +309,22 @@ export const getTrashList = (email) => async (dispatch) => {
 export const setTrashList = (trashList) => ({
   type: TRASH_LIST,
   trashList
+});
+
+export const getDraftList = (email) => async (dispatch) => {
+  try {
+    const draftList = await axios.get(emailPath + `/draft/${email}`, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+      },
+    });
+    dispatch(setDraftList(draftList.data));
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const setDraftList = (draftList) => ({
+  type: DRAFT_LIST,
+  draftList
 });

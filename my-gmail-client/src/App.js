@@ -20,6 +20,7 @@ import SentPage from './components/email/SentPage';
 import ProfilePage from './components/user/ProfilePage';
 import SuccessfullyUpdatedPage from "./components/user/SuccessfullyUpdatedPage"
 import SendEmailPage from './components/email/SendEmailPage';
+import DraftPage from './components/email/DraftPage';
 
 
 const store = configureStore();
@@ -120,6 +121,13 @@ function App() {
               <Redirect to="/login" />
             ) : (
                 <TrashPage />
+              )
+          )} />
+          <Route exact path="/drafts" render={() => (
+            localStorage.getItem("jwtToken") == null ? (
+              <Redirect to="/login" />
+            ) : (
+                <DraftPage />
               )
           )} />
         </Switch>

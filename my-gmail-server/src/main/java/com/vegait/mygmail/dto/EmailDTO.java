@@ -12,20 +12,22 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class EmailDTO {
-	
+
 	private Long id;
-	
-	private String subject ;
-	private String senderEmail ;
-	private String recipientEmail ;
-	private String text ;
-	private LocalDate date ;
-	
-	private Boolean deleted = false ;
-	private Boolean starred = false ;
-	private Boolean snoozed = false ;
-	private Boolean spam = false ;
+
+	private String subject;
+	private String senderEmail;
+	private String recipientEmail;
+	private String text;
+	private LocalDate date;
+	private LocalDate dateSnoozed;
+
+	private Boolean deleted = false;
+	private Boolean starred = false;
+	private Boolean snoozed = false;
+	private Boolean spam = false;
 	private Boolean archived = false;
-	
+	private Boolean isRead = true;
+	private Boolean draft = false;
 
 }

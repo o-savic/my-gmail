@@ -25,6 +25,7 @@ import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import ReportOutlinedIcon from '@material-ui/icons/ReportOutlined';
 import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
 import AddIcon from '@material-ui/icons/Add';
+import InsertDriveFileOutlinedIcon from '@material-ui/icons/InsertDriveFileOutlined';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -135,10 +136,11 @@ const NavigationBar = ({ logout }) => {
           <Tab label="Starred" href="/starred"  {...a11yProps(2)} icon={<StarBorderIcon />} />
           <Tab label="Snoozed" href="/snoozed"  {...a11yProps(3)} icon={<ScheduleIcon />} />
           <Tab label="Sent" href="/sent"  {...a11yProps(4)} icon={<SendIcon />} />
-          <Tab label="All mail" href="/all"  {...a11yProps(5)} icon={<MailOutlineIcon />} />
-          <Tab label="Spam" href="/spam"  {...a11yProps(6)} icon={<ReportOutlinedIcon />} />
-          <Tab label="Trash" href="/trash"  {...a11yProps(7)} icon={<DeleteOutlineOutlinedIcon />} />
-          <Tab label="Profile" style={{ position: "fixed", bottom: "0" }} href="/profile"  {...a11yProps(8)} icon={<AccountCircleIcon />} />
+          <Tab label="Drafts" href="/drafts"  {...a11yProps(5)} icon={<InsertDriveFileOutlinedIcon />} />
+          <Tab label="All mail" href="/all"  {...a11yProps(6)} icon={<MailOutlineIcon />} />
+          <Tab label="Spam" href="/spam"  {...a11yProps(7)} icon={<ReportOutlinedIcon />} />
+          <Tab label="Trash" href="/trash"  {...a11yProps(8)} icon={<DeleteOutlineOutlinedIcon />} />
+          <Tab label="Profile" style={{ position: "fixed", bottom: "0" }} href="/profile"  {...a11yProps(9)} icon={<AccountCircleIcon />} />
         </Tabs>
       </Drawer>
 
