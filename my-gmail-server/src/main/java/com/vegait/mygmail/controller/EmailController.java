@@ -55,6 +55,13 @@ public class EmailController {
 		return new ResponseEntity<Object>(HttpStatus.NO_CONTENT); // code 204
 		
 	}
+	
+	@GetMapping("/{id}")
+	public ResponseEntity<EmailDTO> getEmail(@PathVariable Long id) {
+		Email email = emailService.getEmail(id);
+		EmailDTO dto = modelMapper.map(email, EmailDTO.class);
+		return new ResponseEntity<EmailDTO>(dto, HttpStatus.OK);
+	}
 
 	@GetMapping("/inbox/{email}")
 	public ResponseEntity<List<EmailDTO>> findInbox(@PathVariable("email") String email) {
@@ -143,6 +150,17 @@ public class EmailController {
 
 		return new ResponseEntity<List<EmailDTO>>(emailDTOs, HttpStatus.OK);
 	}
+	
+	@GetMapping("/important/{email}")
+	public ResponseEntity<List<EmailDTO>> findImportant(@PathVariable("email") String email) {
+		List<Email> emailList = emailService.findImportant(email);
+		List<EmailDTO> emailDTOs = emailList.stream().map(cred -> {
+			EmailDTO dto = modelMapper.map(cred, EmailDTO.class);
+			return dto;
+		}).collect(Collectors.toList());
+
+		return new ResponseEntity<List<EmailDTO>>(emailDTOs, HttpStatus.OK);
+	}
 
 	@PatchMapping("/delete/{id}")
 	public ResponseEntity<EmailDTO> changeDeleted(@PathVariable Long id) {
@@ -191,6 +209,13 @@ public class EmailController {
 	@PatchMapping("/read/{id}")
 	public ResponseEntity<EmailDTO> changeRead(@PathVariable Long id) {
 		Email email = emailService.changeRead(id);
+		EmailDTO dto = modelMapper.map(email, EmailDTO.class);
+		return new ResponseEntity<EmailDTO>(dto, HttpStatus.OK);
+	}
+	
+	@PatchMapping("/important/{id}")
+	public ResponseEntity<EmailDTO> changeImportant(@PathVariable Long id) {
+		Email email = emailService.changeImportant(id);
 		EmailDTO dto = modelMapper.map(email, EmailDTO.class);
 		return new ResponseEntity<EmailDTO>(dto, HttpStatus.OK);
 	}

@@ -7,6 +7,7 @@ import {
 	ALL_LIST,
 	SPAM_LIST,
 	DRAFT_LIST,
+	IMPORTANT_LIST,
 
 	SENT_EMAIL,
 	STARRED_EMAIL,
@@ -15,7 +16,9 @@ import {
 	SPAM_EMAIL,
 	SNOOZED_EMAIL,
 	READ_EMAIL,
-	DRAFT_EMAIL
+	DRAFT_EMAIL,
+	EMAIL_DATA,
+	IMPORTANT_EMAIL
 } from "../actionTypes";
 
 const DEFAULT_STATE = {
@@ -27,7 +30,9 @@ const DEFAULT_STATE = {
 	spamList: [],
 	trashList: [],
 	draftList: [],
+	importantList: [],
 
+	emailData: {},
 	sentEmail: {},
 	starredEmail: {},
 	deletedEmail: {},
@@ -35,7 +40,8 @@ const DEFAULT_STATE = {
 	spamEmail: {},
 	snoozedEmail: {},
 	readEmail: {},
-	draftEmail: {}
+	draftEmail: {},
+	importantEmail: {}
 
 };
 
@@ -81,6 +87,16 @@ export default (state = DEFAULT_STATE, action) => {
 				...state,
 				draftEmail: action.draftEmail
 			};
+		case IMPORTANT_EMAIL:
+			return {
+				...state,
+				importantEmail: action.importantEmail
+			};
+		case EMAIL_DATA:
+			return {
+				...state,
+				emailData: action.emailData
+			};
 
 		case INBOX_LIST:
 			return {
@@ -121,6 +137,11 @@ export default (state = DEFAULT_STATE, action) => {
 			return {
 				...state,
 				draftList: action.draftList
+			};
+		case IMPORTANT_LIST:
+			return {
+				...state,
+				importantList: action.importantList
 			};
 		default:
 			return state;

@@ -2,13 +2,14 @@ import {
   REGISTERED_USER,
   SET_CURRENT_USER,
   EDITED_USER,
-  SET_USER_DATA
+  USER_DATA,
 } from "../actionTypes";
 
 const DEFAULT_STATE = {
   isAuthenticated: false,
   user: {},
   registeredUser: {},
+  loggedUser: {}
 };
 
 export default (state = DEFAULT_STATE, action) => {
@@ -29,7 +30,7 @@ export default (state = DEFAULT_STATE, action) => {
         ...state,
         editedUser: action.editedUser
       }
-    case SET_USER_DATA:
+    case USER_DATA:
       return {
         ...state,
         userData: action.userData

@@ -14,7 +14,10 @@ import {
   SNOOZED_EMAIL,
   READ_EMAIL,
   DRAFT_EMAIL,
-  DRAFT_LIST
+  DRAFT_LIST,
+  EMAIL_DATA,
+  IMPORTANT_EMAIL,
+  IMPORTANT_LIST
 } from "../actionTypes";
 import axios from "axios";
 import { emailPath } from "../../properties/path-properties";
@@ -64,6 +67,22 @@ export const setDraftEmail = (draftEmail) => ({
   type: DRAFT_EMAIL,
   draftEmail
 })
+
+export const getEmailData = (id) => async (dispatch) => {
+  try {
+    const emailData = await axios.get(emailPath + `/${id}`);
+    dispatch(setEmailData(emailData.data));
+    return emailData;
+  } catch (err) {
+    console.log(err);
+    return err.response;
+  }
+};
+
+export const setEmailData = (emailData) => ({
+  type: EMAIL_DATA,
+  emailData
+});
 
 export const changeStarred = (id) => async (dispatch) => {
   try {
@@ -182,6 +201,25 @@ export const changeRead = (id) => async (dispatch) => {
 export const setChangedRead = (readEmail) => ({
   type: READ_EMAIL,
   readEmail
+});
+
+export const changeImportant = (id) => async (dispatch) => {
+  try {
+    const importantEmail = await axios.patch(emailPath + `/important/${id}`, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+      },
+    });
+    dispatch(setChangedImportant(importantEmail.data));
+    return importantEmail;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const setChangedImportant = (importantEmail) => ({
+  type: IMPORTANT_EMAIL,
+  importantEmail
 });
 
 
@@ -327,4 +365,22 @@ export const getDraftList = (email) => async (dispatch) => {
 export const setDraftList = (draftList) => ({
   type: DRAFT_LIST,
   draftList
+});
+
+export const getImportantList = (email) => async (dispatch) => {
+  try {
+    const importantList = await axios.get(emailPath + `/important/${email}`, {
+      headers: {
+        Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+      },
+    });
+    dispatch(setImportantList(importantList.data));
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const setImportantList = (importantList) => ({
+  type: IMPORTANT_LIST,
+  importantList
 });

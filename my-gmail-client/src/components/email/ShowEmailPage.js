@@ -9,9 +9,10 @@ import Container from '@material-ui/core/Container';
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import NavigationBar from "../../components/base/NavigationBar"
-import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import { sendEmail, saveDraft } from "../../store/actions/email"
-
+import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
+import { Forward, Reply } from '@material-ui/icons';
+import { compose } from 'redux';
 const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
@@ -26,46 +27,17 @@ const useStyles = makeStyles((theme) => ({
   form: {
     width: '100%', // Fix IE 11 issue.
     marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
+  }
 }));
 
-const SendEmail = ({ sendEmail, saveDraft, email, emailData, history }) => {
-  const [state, setState] = React.useState({
-    subject: emailData.subject ? emailData.subject : "",
-    senderEmail: email,
-    recipientEmail: emailData.senderEmail ? emailData.senderEmail : "", // checking if it's a reply or first email
-    text: emailData.text ? emailData.text : ""
-  });
+const SendEmail = ({ emailData, history }) => {
 
-  const [error, setError] = React.useState(false);
   const classes = useStyles();
 
-  const handleChangeTextField = (e) => {
-    setState({ ...state, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
+  const handleReplyForward = (e) => {
     e.preventDefault();
-    const res = await sendEmail(state).then((response) => {
-      if (response.status === 201) {
-        history.push("/sent");
-      }
-    });
-    setError(true);
-  };
-
-  const handleSaveDraft = async (e) => {
-    e.preventDefault();
-    const res = await saveDraft(state).then((response) => {
-      if (response.status === 200) {
-        history.push("/drafts");
-      }
-    });
-    setError(true);
-  };
+    history.push('/compose');
+  }
 
   return (
     <div>
@@ -74,54 +46,35 @@ const SendEmail = ({ sendEmail, saveDraft, email, emailData, history }) => {
         <CssBaseline />
         <div className={classes.paper}>
           <Avatar className={classes.avatar}>
-            <MailOutlineIcon />
+            <EmojiPeopleIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            New Message
-        </Typography>
+            {emailData.subject}
+          </Typography>
           <form className={classes.form} noValidate>
             <TextField
               variant="outlined"
               margin="normal"
-              required
+              fullWidth
+              label="From"
+              value={emailData.senderEmail}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
               fullWidth
               id="recipientEmail"
               label="To"
-              name="recipientEmail"
-              autoComplete="recipientEmail"
-              autoFocus
-              value={state.recipientEmail}
-              error={error}
-              onChange={handleChangeTextField}
-            />
-
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="subject"
-              label="Subject"
-              id="subject"
-              value={state.subject}
-              autoComplete="subject"
-              error={error}
-              onChange={handleChangeTextField}
+              value={emailData.recipientEmail}
             />
             <TextField
               variant="outlined"
               margin="normal"
               fullWidth
-              id="text"
               label="Text"
-              name="text"
               multiline
               rows={10}
-              autoFocus
-              autoComplete="text"
-              value={state.text}
-              error={error}
-              onChange={handleChangeTextField}
+              value={emailData.text}
             />
             <div align="center">
               <Button
@@ -129,9 +82,10 @@ const SendEmail = ({ sendEmail, saveDraft, email, emailData, history }) => {
                 variant="contained"
                 color="primary"
                 className={classes.submit}
-                onClick={handleSaveDraft}
+                onClick={handleReplyForward}
               >
-                SAVE DRAFT
+                <Reply />
+                REPLY
               </Button>
               &nbsp;
               <Button
@@ -139,13 +93,12 @@ const SendEmail = ({ sendEmail, saveDraft, email, emailData, history }) => {
                 variant="contained"
                 color="primary"
                 className={classes.submit}
-                onClick={handleSubmit}
+                onClick={handleReplyForward}
               >
-                SEND
+                <Forward />
+                FORWARD
               </Button>
             </div>
-
-
           </form>
         </div>
 

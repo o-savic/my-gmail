@@ -11,6 +11,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { login } from "../../store/actions/auth";
+import { getUserData } from "../../store/actions/user";
+
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 
 const useStyles = makeStyles((theme) => ({
@@ -48,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignInSide = ({ login, history }) => {
+const SignInSide = ({ login, getUserData, history }) => {
   const [state, setState] = React.useState({
     email: "",
     password: "",
@@ -65,6 +67,11 @@ const SignInSide = ({ login, history }) => {
     e.preventDefault();
     const res = await login(state).then((response) => {
       if (response.status === 200) {
+        const res2 = getUserData(state.email).then((response2) => {
+          if (response2.status === 200) {
+            console.log("Got user data");
+          }
+        })
         history.push("/inbox");
       }
     });
@@ -139,4 +146,4 @@ const SignInSide = ({ login, history }) => {
 
 const mapStateToProps = (state) => ({});
 
-export default withRouter(connect(mapStateToProps, { login })(SignInSide));
+export default withRouter(connect(mapStateToProps, { login, getUserData })(SignInSide));

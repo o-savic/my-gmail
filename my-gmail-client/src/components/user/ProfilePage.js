@@ -35,43 +35,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const UserProfile = ({ getUserData, userData, email, editUser, history }) => {
+const UserProfile = ({ userData, getUserData, email, editUser, history }) => {
 
   const classes = useStyles();
   const [error, setError] = React.useState(false);
   const [change, setChange] = useState(null);
   const [state, setState] = React.useState({
-    firstName: "",
-    lastName: "",
-    username: "",
-    id: 0,
+    firstName: userData ? userData.firstName : localStorage.getItem("firstName"),
+    lastName: userData ? userData.lastName : localStorage.getItem("lastName"),
+    username: userData ? userData.username : localStorage.getItem("usernameV"),
+    id: userData ? userData.id : localStorage.getItem("id"),
     oldPassword: "",
     newPassword: "",
-    confirmedPassword: "",
-    loaded: false
+    confirmedPassword: ""
   });
 
-  useLayoutEffect(() => {
-    setState({ loaded: false });
-
-    (async () => {
-      const result = await getUserData(email).then((response) => {
-        if (response.status === 200) {
-          setState({ loaded: true });
-          setState({
-            firstName: localStorage.getItem("firstName"),
-            lastName: localStorage.getItem("lastName"),
-            username: localStorage.getItem("usernameV"),
-            id: localStorage.getItem("id"),
-          });
-        }
-      });
-    })();
-  }, []); //[getUserData, email]
-
-  if (window.onbeforeunload) {
-    setState({ loaded: false })
-  }
+  useEffect(() => {
+    getUserData(email);
+  }, [getUserData, email]);
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -107,7 +88,6 @@ const UserProfile = ({ getUserData, userData, email, editUser, history }) => {
   return (
     <div>
       <NavigationBar></NavigationBar>
-
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <div className={classes.paper}>
@@ -269,4 +249,4 @@ const mapStateToProps = (state) => ({
   email: state.user.user.sub
 });
 
-export default withRouter(connect(mapStateToProps, { getUserData, editUser })(UserProfile));
+export default withRouter(connect(mapStateToProps, { editUser, getUserData })(UserProfile));

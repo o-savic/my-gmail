@@ -27,7 +27,8 @@ public class EmailDTO {
 	private Boolean snoozed = false;
 	private Boolean spam = false;
 	private Boolean archived = false;
-	private Boolean isRead = true;
+	private Boolean isRead = false;
 	private Boolean draft = false;
+	private Boolean important = false;
 
 }

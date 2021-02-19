@@ -21,6 +21,8 @@ import ProfilePage from './components/user/ProfilePage';
 import SuccessfullyUpdatedPage from "./components/user/SuccessfullyUpdatedPage"
 import SendEmailPage from './components/email/SendEmailPage';
 import DraftPage from './components/email/DraftPage';
+import ShowEmailPage from './components/email/ShowEmailPage';
+import ImportantPage from './components/email/ImportantPage';
 
 
 const store = configureStore();
@@ -67,7 +69,7 @@ function App() {
               )
           )} />
 
-          <Route exact path="/compose" render={() => (
+          <Route path="/compose" render={() => (
             localStorage.getItem("jwtToken") == null ? (
               <Redirect to="/login" />
             ) : (
@@ -128,6 +130,20 @@ function App() {
               <Redirect to="/login" />
             ) : (
                 <DraftPage />
+              )
+          )} />
+          <Route exact path="/important" render={() => (
+            localStorage.getItem("jwtToken") == null ? (
+              <Redirect to="/login" />
+            ) : (
+                <ImportantPage />
+              )
+          )} />
+          <Route exact path="/show" render={() => (
+            localStorage.getItem("jwtToken") == null ? (
+              <Redirect to="/login" />
+            ) : (
+                <ShowEmailPage />
               )
           )} />
         </Switch>

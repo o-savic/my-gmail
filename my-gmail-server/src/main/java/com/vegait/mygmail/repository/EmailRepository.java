@@ -20,13 +20,13 @@ public interface EmailRepository extends JpaRepository<Email, Long> {
 	@Query(value = "SELECT * FROM email AS e WHERE e.recipient_id = :userId AND e.deleted = FALSE AND e.archived = FALSE AND e.spam = FALSE AND e.snoozed = FALSE AND e.draft = FALSE", nativeQuery = true)
 	public List<Email> findInbox(Long userId);
 
-	@Query(value = "SELECT * FROM email AS e WHERE (e.recipient_id = :userId OR e.sender_id = :userId) AND e.deleted = FALSE AND e.spam = FALSE AND e.starred = TRUE OR (e.draft = TRUE AND e.sender_id = :userId)", nativeQuery = true)
+	@Query(value = "SELECT * FROM email AS e WHERE (e.recipient_id = :userId OR e.sender_id = :userId) AND e.deleted = FALSE AND e.spam = FALSE AND e.starred = TRUE", nativeQuery = true)
 	public List<Email> findStarred(Long userId);
 
-	@Query(value = "SELECT * FROM email AS e WHERE (e.recipient_id = :userId OR e.sender_id = :userId) AND e.deleted = FALSE AND e.spam = FALSE AND e.snoozed = TRUE OR (e.draft = TRUE AND e.sender_id = :userId)", nativeQuery = true)
+	@Query(value = "SELECT * FROM email AS e WHERE (e.recipient_id = :userId OR e.sender_id = :userId) AND e.deleted = FALSE AND e.spam = FALSE AND e.snoozed = TRUE", nativeQuery = true)
 	public List<Email> findSnoozed(Long userId);
 
-	@Query(value = "SELECT * FROM email AS e WHERE (e.recipient_id = :userId OR e.sender_id = :userId) AND e.deleted = FALSE AND e.spam = TRUE OR (e.draft = TRUE AND e.sender_id = :userId)", nativeQuery = true)
+	@Query(value = "SELECT * FROM email AS e WHERE (e.recipient_id = :userId OR e.sender_id = :userId) AND e.deleted = FALSE AND e.spam = TRUE", nativeQuery = true)
 	public List<Email> findSpam(Long userId);
 
 	@Query(value = "SELECT * FROM email AS e WHERE (e.recipient_id = :userId OR e.sender_id = :userId) AND e.deleted = TRUE", nativeQuery = true)
@@ -34,6 +34,9 @@ public interface EmailRepository extends JpaRepository<Email, Long> {
 
 	@Query(value = "SELECT * FROM email AS e WHERE e.sender_id = :userId AND e.deleted = FALSE AND e.draft = TRUE", nativeQuery = true)
 	public List<Email> findDraft(Long userId);
+	
+	@Query(value = "SELECT * FROM email AS e WHERE (e.recipient_id = :userId OR e.sender_id = :userId) AND e.deleted = FALSE AND e.spam = FALSE AND e.important = TRUE", nativeQuery = true)
+	public List<Email> findImportant(Long userId);
 	
 	@Modifying
 	@Transactional

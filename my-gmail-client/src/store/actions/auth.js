@@ -1,7 +1,7 @@
-import { SET_CURRENT_USER, USER_LOGOUT } from "../actionTypes";
+import { SET_CURRENT_USER, USER_LOGOUT, USER_DATA } from "../actionTypes";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
-import { authPath } from "../../properties/path-properties"
+import { authPath, userPath } from "../../properties/path-properties"
 
 export const setUser = (user) => ({
   type: SET_CURRENT_USER,
@@ -29,7 +29,6 @@ export function logout() {
 export const login = (userData) => async (dispatch) => {
   try {
     const jwt = await axios.post(authPath + "/signin", userData);
-    console.log(jwt.data);
     const pureJwt = jwt.data.accessToken;
     localStorage.setItem("jwtToken", pureJwt);
     localStorage.setItem("username", jwt.data.email);
@@ -42,5 +41,7 @@ export const login = (userData) => async (dispatch) => {
     return err.response;
   }
 };
+
+
 
 

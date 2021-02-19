@@ -26,6 +26,7 @@ import ReportOutlinedIcon from '@material-ui/icons/ReportOutlined';
 import DeleteOutlineOutlinedIcon from '@material-ui/icons/DeleteOutlineOutlined';
 import AddIcon from '@material-ui/icons/Add';
 import InsertDriveFileOutlinedIcon from '@material-ui/icons/InsertDriveFileOutlined';
+import { LabelImportantTwoTone } from '@material-ui/icons';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -69,11 +70,57 @@ const NavigationBar = ({ logout }) => {
     history.push("/");
   };
 
+  const handleProfile = (e) => {
+    e.preventDefault();
+    history.push("/profile");
+  }
+  const handleInbox = (e) => {
+    e.preventDefault();
+    history.push("/inbox");
+  }
+  const handleStarred = (e) => {
+    e.preventDefault();
+    history.push("/starred");
+  }
+  const handleCompose = (e) => {
+    e.preventDefault();
+    history.push("/compose");
+  }
+  const handleSnoozed = (e) => {
+    e.preventDefault();
+    history.push("/snoozed");
+  }
+  const handleSent = (e) => {
+    e.preventDefault();
+    history.push("/sent");
+  }
+  const handleDrafts = (e) => {
+    e.preventDefault();
+    history.push("/drafts");
+  }
+  const handleImportant = (e) => {
+    e.preventDefault();
+    history.push("/important");
+  }
+  const handleAll = (e) => {
+    e.preventDefault();
+    history.push("/all");
+  }
+  const handleSpam = (e) => {
+    e.preventDefault();
+    history.push("/spam");
+  }
+  const handleTrash = (e) => {
+    e.preventDefault();
+    history.push("/trash");
+  }
+  
+
   const showButtons = () => {
     if (localStorage.getItem("jwtToken") !== "") {
       return (
         <div>
-          <Button color="inherit" className={classes.submit} href="/profile"> Profile</Button>
+          <Button color="inherit" className={classes.submit} onClick={(e) => handleProfile(e)}> Profile</Button>
           <Button color="inherit" onClick={handleLogout}>Logout</Button>
         </div>
       );
@@ -132,15 +179,16 @@ const NavigationBar = ({ logout }) => {
           textColor="primary"
         >
           <Tab label="Compose" href="/compose" type="text"  {...a11yProps(0)} icon={<AddIcon />} />
-          <Tab label="Inbox" href="/inbox" {...a11yProps(1)} icon={<InboxIcon />} />
-          <Tab label="Starred" href="/starred"  {...a11yProps(2)} icon={<StarBorderIcon />} />
-          <Tab label="Snoozed" href="/snoozed"  {...a11yProps(3)} icon={<ScheduleIcon />} />
-          <Tab label="Sent" href="/sent"  {...a11yProps(4)} icon={<SendIcon />} />
-          <Tab label="Drafts" href="/drafts"  {...a11yProps(5)} icon={<InsertDriveFileOutlinedIcon />} />
-          <Tab label="All mail" href="/all"  {...a11yProps(6)} icon={<MailOutlineIcon />} />
-          <Tab label="Spam" href="/spam"  {...a11yProps(7)} icon={<ReportOutlinedIcon />} />
-          <Tab label="Trash" href="/trash"  {...a11yProps(8)} icon={<DeleteOutlineOutlinedIcon />} />
-          <Tab label="Profile" style={{ position: "fixed", bottom: "0" }} href="/profile"  {...a11yProps(9)} icon={<AccountCircleIcon />} />
+          <Tab label="Inbox" onClick={(e) => handleInbox(e)} {...a11yProps(1)} icon={<InboxIcon />} />
+          <Tab label="Starred" onClick={(e) => handleStarred(e)}  {...a11yProps(2)} icon={<StarBorderIcon />} />
+          <Tab label="Snoozed" onClick={(e) => handleSnoozed(e)}  {...a11yProps(3)} icon={<ScheduleIcon />} />
+          <Tab label="Sent" onClick={(e) => handleSent(e)}  {...a11yProps(4)} icon={<SendIcon />} />
+          <Tab label="Drafts" onClick={(e) => handleDrafts(e)}  {...a11yProps(5)} icon={<InsertDriveFileOutlinedIcon />} />
+          <Tab label="Important" onClick={(e) => handleImportant(e)}  {...a11yProps(6)} icon={<LabelImportantTwoTone />} />
+          <Tab label="All mail" onClick={(e) => handleAll(e)}  {...a11yProps(7)} icon={<MailOutlineIcon />} />
+          <Tab label="Spam" onClick={(e) => handleSpam(e)}  {...a11yProps(8)} icon={<ReportOutlinedIcon />} />
+          <Tab label="Trash" onClick={(e) => handleTrash(e)} {...a11yProps(9)} icon={<DeleteOutlineOutlinedIcon />} />
+          <Tab label="Profile" style={{ position: "fixed", bottom: "0" }} onClick={(e) => handleProfile(e)}  {...a11yProps(10)} icon={<AccountCircleIcon />} />
         </Tabs>
       </Drawer>
 

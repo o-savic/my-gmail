@@ -30,7 +30,7 @@ public class EmailService {
 		save(email);
 		return email;
 	}
-	
+
 	public Email saveDraft(Email email, String senderEmail, String recipientEmail) {
 		User sender = userRepository.findByEmail(senderEmail);
 		User recipient = userRepository.findByEmail(recipientEmail);
@@ -38,16 +38,24 @@ public class EmailService {
 		email.setRecipient(recipient);
 		email.setDate(LocalDate.now());
 		email.setDraft(true);
-		save(email);		
+		save(email);
 		return email;
 	}
-	
+
 	public void permanentlyDelete(Long id) {
 		Email email = emailRepository.getOne(id);
-		if (email == null) {  
+		if (email == null) {
 			throw new BadRequestException("Email is not found, so it cannot be deleted.");
 		}
 		emailRepository.permanentlyDelete(id);
+	}
+
+	public Email getEmail(Long id) {
+		Email email = emailRepository.getOne(id);
+		if (email == null) {
+			throw new BadRequestException("Email is not found!");
+		}
+		return email;
 	}
 
 	// Inbox
@@ -96,6 +104,12 @@ public class EmailService {
 	public List<Email> findDraft(String email) {
 		User user = userRepository.findByEmail(email);
 		return emailRepository.findDraft(user.getId());
+	}
+
+	// Important
+	public List<Email> findImportant(String email) {
+		User user = userRepository.findByEmail(email);
+		return emailRepository.findImportant(user.getId());
 	}
 
 	// helper method
@@ -171,6 +185,16 @@ public class EmailService {
 			throw new BadRequestException("Email cannot be (un)read.");
 		}
 		email.setIsRead(!email.getIsRead());
+		save(email);
+		return email;
+	}
+
+	public Email changeImportant(Long id) {
+		Email email = emailRepository.getOne(id);
+		if (email == null || email.getDeleted() || email.getSpam()) {
+			throw new BadRequestException("Email cannot be (un)important.");
+		}
+		email.setImportant(!email.getImportant());
 		save(email);
 		return email;
 	}
