@@ -1,7 +1,7 @@
-import { SET_CURRENT_USER, USER_LOGOUT, USER_DATA } from "../actionTypes";
+import { SET_CURRENT_USER, USER_LOGOUT } from "../actionTypes";
 import axios from "axios";
 import jwtDecode from "jwt-decode";
-import { authPath, userPath } from "../../properties/path-properties"
+import { authPath } from "../../properties/path-properties"
 
 export const setUser = (user) => ({
   type: SET_CURRENT_USER,
